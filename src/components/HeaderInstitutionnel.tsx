@@ -49,7 +49,7 @@ export default function HeaderInstitutionnel() {
           Text Analysis
         </Link>
         <Link to="/audio" className={`font-medium text-base hover:underline ${location.pathname === "/audio" ? "text-institutional-blue" : "text-secondary-text"}`}>
-          Voice Analysis
+          Speech Analysis
         </Link>
         <Link to="/twitter" className={`font-medium text-base hover:underline ${location.pathname === "/twitter" ? "text-institutional-blue" : "text-secondary-text"}`}>
           Twitter Analysis
