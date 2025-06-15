@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 /**
  * JamesBondTransition shows a full-screen expanding/contracting circle (iris/gun barrel effect)
- * Activated when `active` = true, for ~0.8s.
+ * Now enhanced with "barrel" stripes/rainures
  */
 const ANIMATION_DURATION = 800; // ms
 
@@ -18,7 +18,6 @@ export default function JamesBondTransition({ active, onEnd }: JBTransitionProps
   useEffect(() => {
     if (active) {
       setVisible(true);
-      // Call onEnd after animation (so main page content updates underneath)
       const timer = setTimeout(() => {
         setVisible(false);
         onEnd?.();
@@ -30,7 +29,7 @@ export default function JamesBondTransition({ active, onEnd }: JBTransitionProps
   if (!visible) return null;
   return (
     <div
-      className={`fixed z-[9999] inset-0 flex items-center justify-center pointer-events-none`}
+      className="fixed z-[9999] inset-0 flex items-center justify-center pointer-events-none"
       aria-hidden
       style={{ background: "rgba(0,0,0,0.01)" }}
     >
@@ -41,7 +40,18 @@ export default function JamesBondTransition({ active, onEnd }: JBTransitionProps
           height: "200vw",
         }}
       >
-        <div className="jb-barrel-circle" />
+        <div className="jb-barrel-circle-improved">
+          {/* Rainures / Stripes */}
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="jb-barrel-stripe"
+              style={{
+                transform: `rotate(${i * 60}deg) translateY(-48%)`,
+              }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
