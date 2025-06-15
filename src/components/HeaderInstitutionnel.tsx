@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// Privilégie l'image locale mais fallback sur le lien Huggingface si besoin
-const SMOLAGENT_LOGO = "/smolagent.png";
+// Nouveau logo fourni par l'utilisateur
+const SMOLAGENT_LOGO = "/lovable-uploads/40eed738-81ab-4eac-95d8-1d05cfb054c7.png";
 
 const MODELS = [
   { value: "claude-sonnet-4", label: "Claude 4 Sonnet" },
@@ -52,9 +53,10 @@ export default function HeaderInstitutionnel() {
           Speech Analysis
         </Link>
         <Link to="/twitter" className={`font-medium text-base hover:underline ${location.pathname === "/twitter" ? "text-institutional-blue" : "text-secondary-text"}`}>
-          Twitter Analysis
+          X Analysis
         </Link>
       </nav>
     </header>
   );
 }
+
