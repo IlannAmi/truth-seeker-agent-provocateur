@@ -39,7 +39,7 @@ export default function AnalyseInput({
         htmlFor="oss-textarea"
         className="block text-lg font-medium text-primary-text mb-2"
       >
-        Paste Debate Text
+        Paste Text to be fact-checked
       </label>
       <div className="relative">
         <textarea
@@ -53,7 +53,7 @@ export default function AnalyseInput({
             ${focused ? "border-institutional-blue ring-2 ring-institutional-blue/20" : "border-border"}
             ${isError ? "border-destructive ring-2 ring-destructive/20" : ""}
           `}
-          placeholder="Paste the political debate text to analyze..."
+          placeholder="Paste the text to analyze..."
           value={input}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -97,4 +97,3 @@ export default function AnalyseInput({
     </div>
   );
 }
-
