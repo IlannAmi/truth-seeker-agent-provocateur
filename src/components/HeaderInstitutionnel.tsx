@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// Nouveau logo fourni par l'utilisateur
-const SMOLAGENT_LOGO = "/lovable-uploads/40eed738-81ab-4eac-95d8-1d05cfb054c7.png";
+// Logo X fourni par l'utilisateur (actualisé)
+const SMOLAGENT_LOGO = "/lovable-uploads/c984f8f9-691e-4b4e-abb3-757ccc8ac1e3.png";
 
 const MODELS = [
   { value: "claude-sonnet-4", label: "Claude 4 Sonnet" },
@@ -19,7 +19,7 @@ export default function HeaderInstitutionnel() {
       <div className="flex items-center gap-3">
         <img
           src={SMOLAGENT_LOGO}
-          alt="Smolagent Logo"
+          alt="X Logo"
           className="w-9 h-9 object-contain bg-white rounded"
           onError={e => {
             (e.currentTarget as HTMLImageElement).src =
@@ -59,4 +59,3 @@ export default function HeaderInstitutionnel() {
     </header>
   );
 }
-
