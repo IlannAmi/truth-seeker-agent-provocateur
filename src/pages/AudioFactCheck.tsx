@@ -184,12 +184,20 @@ export default function AudioFactCheck() {
         throw new Error(txt || `Backend error: ${resp.status}`);
       }
       const data = await resp.json();
-      // on Attend un tableau de résultats
-      if (Array.isArray(data) && data[0]?.statement && data[0]?.classification) {
-        setResults(data);
-        setStatus("completed");
-      } else if (typeof data === "object" && data.statement && data.classification) {
-        setResults([data]);
+      // nouveau : supporte { facts_checked: [...] }
+      let resultsArr: any[] = [];
+      if (data && Array.isArray(data.facts_checked)) {
+        resultsArr = data.facts_checked;
+      } else if (Array.isArray(data)) {
+        resultsArr = data;
+      } else if (data && typeof data === "object" && data.statement && data.classification) {
+        resultsArr = [data];
+      } else {
+        resultsArr = [];
+      }
+
+      if (resultsArr.length > 0) {
+        setResults(resultsArr);
         setStatus("completed");
       } else {
         setErrorMsg("Chat backend did not return a valid analysis.");

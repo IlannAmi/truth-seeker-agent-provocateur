@@ -1,4 +1,3 @@
-
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import AnalyseInput from "@/components/AnalyseInput";
 import EmptyState from "@/components/EmptyState";
@@ -31,7 +30,6 @@ const Index = () => {
     setErrorMsg(null);
 
     try {
-      // On simule ici une "progression" simple pour garder un effet visuel progressif
       setAgentThoughts(["Sending request to backend..."]);
       const resp = await fetch(BACKEND_URL, {
         method: "POST",
@@ -39,7 +37,7 @@ const Index = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          input_test: txt,
+          input_text: txt,
         }),
       });
 
@@ -51,10 +49,20 @@ const Index = () => {
       }
 
       const data = await resp.json();
-
       setAgentThoughts(thoughts => [...thoughts, "Response received!"]);
-      // Résultat affiché comme tableau pour compatibilité ResultsList (ou à adapter)
-      setResults([data]);
+
+      // On accepte format: { facts_checked: [...] }
+      let resultsArr: any[] = [];
+      if (data && Array.isArray(data.facts_checked)) {
+        resultsArr = data.facts_checked;
+      } else if (Array.isArray(data)) {
+        resultsArr = data;
+      } else if (data && typeof data === "object" && data.statement && data.classification) {
+        resultsArr = [data];
+      } else {
+        resultsArr = [];
+      }
+      setResults(resultsArr);
       setStatus("completed");
     } catch (e: any) {
       setErrorMsg("Analysis failed. " + (e?.message || ""));
