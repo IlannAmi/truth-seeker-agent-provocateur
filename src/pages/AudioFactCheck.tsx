@@ -121,7 +121,8 @@ export default function AudioFactCheck() {
   // Envoi du .webm et gestion du parsing backend :
   const handleSendAudio = async (audioBlob: Blob) => {
     setStatus("transcribing");
-    const BACKEND_SPEECH_URL = "http://127.0.0.1:8000/api/speech";
+
+    const BACKEND_SPEECH_URL = "http://127.0.0.1:8000/api/speech/process-audio/";
     try {
       const formData = new FormData();
       formData.append("file", audioBlob, "audio.webm");
