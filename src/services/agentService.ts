@@ -68,6 +68,19 @@ export async function analyzeDebate(
         nuanced: ["European Environment Agency Overview"]
       },
       explanation: "Recent data supports a decline, though local variations may exist."
+    },
+    {
+      statement: "The new education policy will increase student performance.",
+      speaker: "Candidate C",
+      classification: "grey",
+      confidence: 50,
+      summary: "Unverifiable without longitudinal studies.",
+      sources: {
+        supporting: [],
+        contradicting: [],
+        nuanced: ["Education Research Journal 2024"]
+      },
+      explanation: "The claim is speculative and requires more data to validate."
     }
   ];
 
