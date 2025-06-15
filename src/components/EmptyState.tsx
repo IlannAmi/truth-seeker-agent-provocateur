@@ -8,7 +8,9 @@ export default function EmptyState() {
         <FileText className="text-institutional-blue" size={36} aria-hidden />
       </div>
       <div className="text-xl font-medium mb-2 text-primary-text">Welcome!</div>
-      <p className="text-secondary-text mb-1 text-base text-center max-w-[340px]">Paste your political debate text to begin analysis.</p>
+      <p className="text-secondary-text mb-1 text-base text-center max-w-[340px]">
+        Paste your text to be verified.
+      </p>
       <span className="text-sm text-secondary-text opacity-70">Your data remains confidential and secure.</span>
     </div>
   );

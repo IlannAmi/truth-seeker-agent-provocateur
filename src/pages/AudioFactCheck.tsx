@@ -126,7 +126,7 @@ export default function AudioFactCheck() {
     <div className="bg-background min-h-screen w-full flex flex-col font-inter">
       <HeaderInstitutionnel />
       <main className="flex-grow flex-col flex items-center justify-start pt-8 px-2 w-full">
-        <h2 className="text-2xl font-bold mb-4">Voice Debate Analysis</h2>
+        <h2 className="text-2xl font-bold mb-4">Speech Analysis</h2>
         {/* Afficher la TrustBar s'il y a des résultats */}
         {results.length > 0 && (
           <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} className="mb-4" />
@@ -137,7 +137,7 @@ export default function AudioFactCheck() {
               onClick={handleStartRecording}
               className="w-full h-11 rounded-lg font-medium text-base bg-institutional-blue text-white shadow-sm hover:bg-institutional-blue/90 transition-all"
             >
-              🎤 Start Recording
+              🎤 Register your Speech to be verified
             </Button>
             {!isMicAllowed &&
               <div className="text-destructive mt-3">Microphone permission denied.</div>
@@ -145,7 +145,7 @@ export default function AudioFactCheck() {
             {errorMsg && (
               <div className="text-destructive mt-3">{errorMsg}</div>
             )}
-            <div className="text-secondary-text mt-3 text-sm">Click to start recording using your microphone.</div>
+            <div className="text-secondary-text mt-3 text-sm">Tap to start registering your speech for analysis.</div>
           </div>
         )}
         {status === "recording" && (
