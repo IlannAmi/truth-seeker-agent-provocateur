@@ -1,8 +1,8 @@
-
 import React, { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TweetCard from "./TweetCard";
+import TweetsTrustSummary from "./TweetsTrustSummary";
 
 // Simuler des comptes et des tweets (remplace par une vraie API plus tard)
 const MOCK_USERS = [
@@ -180,6 +180,13 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
           ))}
         </select>
       </form>
+      {/* Synthèse/graphique tout en haut — après choix compte */}
+      <TweetsTrustSummary
+        tweets={tweets}
+        username={selectedUser.username}
+        name={selectedUser.name}
+        avatar={selectedUser.avatar}
+      />
       {loading && tweets.length === 0 ? (
         <div className="flex flex-col items-center mt-10">
           <Loader className="animate-spin text-[#1DA1F2] mb-2" />
@@ -217,4 +224,3 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
     </div>
   );
 }
-
