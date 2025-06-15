@@ -118,20 +118,16 @@ export default function AudioFactCheck() {
     handleSendAudio(file);
   };
 
-  // Remplace cette fonction par une version qui contacte l'API backend
+  // Envoi du .webm et gestion du parsing backend :
   const handleSendAudio = async (audioBlob: Blob) => {
     setStatus("transcribing");
-
     const BACKEND_SPEECH_URL = "http://127.0.0.1:8000/api/speech";
     try {
       const formData = new FormData();
       formData.append("file", audioBlob, "audio.webm");
-
-      // Pour montrer la progression à l'utilisateur
       setTranscript(null);
       setErrorMsg(null);
 
-      // Optionnel : on peut aussi garder "Analyzing..." un court instant visuellement
       const resp = await fetch(BACKEND_SPEECH_URL, {
         method: "POST",
         body: formData,
@@ -141,13 +137,34 @@ export default function AudioFactCheck() {
         const text = await resp.text();
         throw new Error(text || `Backend error: ${resp.status}`);
       }
-
-      // Suppose que la réponse backend ressemble à ce qui est attendu (voir la réponse précédente)
       const data = await resp.json();
 
-      setStatus("completed");
-      setResults([data]);
-      setTranscript(data.transcript || null); // Essayez d'obtenir la transcription si elle est incluse dans la réponse
+      // Gestion automatique : transcription / analyse
+      // Cas 1 : le backend répond simplement { text: ... }
+      if (typeof data === "object" && data.text && !data.statement && !data.classification) {
+        setTranscript(data.text);
+        setResults([]);
+        setStatus("completed"); // On "termine" même si c’est juste la transcription
+      }
+      // Cas 2 : le backend répond avec un/des objets d’analyse
+      else if (Array.isArray(data) || (data.statement && data.classification)) {
+        // Normalise. Si c'est un objet direct → on le met dans un array :
+        const resultsArr = Array.isArray(data) ? data : [data];
+        setResults(resultsArr);
+
+        // Transcription si présente dans data :
+        let transcriptText = (data.transcript || (resultsArr[0]?.transcript) || "");
+        // fallback: ignorez les faux vides
+        if (!transcriptText && typeof data === "object" && data.text) transcriptText = data.text;
+        setTranscript(transcriptText || null);
+
+        setStatus("completed");
+      }
+      // Cas réponse inattendue :
+      else {
+        setErrorMsg("Backend response format not recognized.");
+        setStatus("error");
+      }
     } catch (e: any) {
       setErrorMsg("Error during audio analysis. " + (e?.message || ""));
       setStatus("error");
@@ -255,16 +272,33 @@ export default function AudioFactCheck() {
                 )}
               </div>
             )}
-            {/* Affiche la réponse brute (exemple : JSON), à personnaliser selon structure backend */}
-            <div className="card max-w-2xl w-full p-5 mx-auto my-10 text-sm text-primary-text">
-              <pre className="whitespace-pre-wrap break-words">{results.length > 0 ? JSON.stringify(results[0], null, 2) : "Analysis in progress..."}</pre>
-              <Button
-                onClick={handleReset}
-                className="mt-6 px-5 py-2 bg-institutional-blue text-white rounded font-medium shadow hover:bg-institutional-blue/90 transition"
-              >
-                Restart
-              </Button>
-            </div>
+
+            {/* Si résultats d’analyse, on les affiche joliment via ResultsList */}
+            {results.length > 0 ? (
+              <ResultsList results={results} onRetry={handleReset} />
+            ) : (
+              // Sinon, message sympa (pas de résultats ou juste transcription)
+              <div className="card max-w-2xl w-full p-5 mx-auto my-10 text-sm text-primary-text text-center">
+                <div>
+                  {transcript
+                    ? (
+                      <>
+                        <div className="mb-2">✅ Audio transcrit :</div>
+                        <div className="italic text-secondary-text mb-5">{transcript}</div>
+                        <div className="text-xs text-muted">Aucune affirmation vérifiable détectée pour l’instant.</div>
+                      </>
+                    )
+                    : <div className="text-muted">No verifiable analysis or transcript detected.</div>
+                  }
+                </div>
+                <Button
+                  onClick={handleReset}
+                  className="mt-6 px-5 py-2 bg-institutional-blue text-white rounded font-medium shadow hover:bg-institutional-blue/90 transition"
+                >
+                  Restart
+                </Button>
+              </div>
+            )}
           </div>
         )}
         {status === "idle" && <EmptyState />}
