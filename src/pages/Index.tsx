@@ -1,4 +1,3 @@
-
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import AnalyseInput from "@/components/AnalyseInput";
 import EmptyState from "@/components/EmptyState";
@@ -11,7 +10,6 @@ import { analyzeDebate } from "@/services/agentService";
 type AgentStatus = "idle" | "analyzing" | "completed" | "error";
 type AnalysisResult = {
   statement: string;
-  speaker?: string;
   classification: "red" | "orange" | "green" | "grey";
   confidence: number;
   summary: string;
@@ -90,4 +88,3 @@ const Index = () => {
 };
 
 export default Index;
-

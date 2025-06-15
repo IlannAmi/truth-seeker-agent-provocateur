@@ -1,11 +1,11 @@
 
-import React from "react";
-import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import React, { useState } from "react";
+import { CheckCircle, AlertTriangle, XCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AnalysisDetailModal from "./AnalysisDetailModal";
 
 type StatementResult = {
   statement: string;
-  speaker?: string;
   classification: "red" | "orange" | "green" | "grey";
   confidence: number;
   summary: string;
@@ -50,6 +50,14 @@ const STATUS_INFO = {
 } as const;
 
 export default function ResultsList({ results, onRetry }: ResultsListProps) {
+  const [selected, setSelected] = useState<StatementResult | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleCardClick = (result: StatementResult) => {
+    setSelected(result);
+    setModalOpen(true);
+  };
+
   if (!results.length) {
     return (
       <div className="card py-16 px-7 max-w-xl w-full mx-auto text-center my-10">
@@ -65,10 +73,12 @@ export default function ResultsList({ results, onRetry }: ResultsListProps) {
       {results.map((result, idx) => {
         const status = STATUS_INFO[result.classification];
         return (
-          <div
+          <button
             key={idx}
-            className={`card flex flex-col sm:flex-row items-start sm:items-center gap-3 px-5 py-4 shadow-md transition-shadow hover:shadow-xl duration-200 group ${status.bg} ${status.border}`}
+            type="button"
+            className={`card flex flex-col sm:flex-row items-start sm:items-center gap-3 px-5 py-4 shadow-md transition-shadow hover:shadow-xl duration-200 group ${status.bg} ${status.border} text-left outline-none focus:ring-2 focus:ring-[#2B6CB0]/60`}
             style={{ borderRadius: "12px" }}
+            onClick={() => handleCardClick(result)}
           >
             <div className="flex items-center gap-2 mb-2 sm:mb-0">
               {status.icon}
@@ -76,11 +86,6 @@ export default function ResultsList({ results, onRetry }: ResultsListProps) {
             </div>
             <div className="flex-1">
               <div className="italic text-primary-text text-base mb-0.5">&ldquo;{result.statement}&rdquo;</div>
-              {result.speaker && (
-                <span className="text-xs bg-secondary px-2 py-0.5 rounded text-secondary-text font-medium mr-2">
-                  {result.speaker}
-                </span>
-              )}
               <div className="text-sm font-medium text-secondary-text mb-1">{result.summary}</div>
               <div className="w-full h-2 bg-muted rounded mt-3 mb-1 relative">
                 <div
@@ -94,16 +99,21 @@ export default function ResultsList({ results, onRetry }: ResultsListProps) {
               <div className="text-xs text-secondary-text opacity-80 mb-1">Confidence: {result.confidence}%</div>
             </div>
             <div className="ml-auto flex items-center">
-              <span className="text-primary-text opacity-60 text-2xl cursor-pointer transition-transform hover:scale-110">
-                &rsaquo;
+              <span className="text-primary-text opacity-60 text-2xl cursor-pointer transition-transform group-hover:scale-110">
+                <ChevronRight size={22} />
               </span>
             </div>
-          </div>
+          </button>
         );
       })}
       <Button variant="outline" className="mt-4 mx-auto" onClick={onRetry}>
         Start a New Analysis
       </Button>
+      <AnalysisDetailModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        result={selected}
+      />
     </div>
   );
 }
