@@ -41,14 +41,16 @@ export default function AudioFactCheck() {
     setIsMicAllowed(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      // IMPORTANT : Utiliser audio/wav si supporté par le navigateur
+      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/wav" });
       mediaRecorderRef.current = mediaRecorder;
       audioChunks.current = [];
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) audioChunks.current.push(event.data);
       };
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunks.current, { type: "audio/webm" });
+        // Création du blob WAV
+        const blob = new Blob(audioChunks.current, { type: "audio/wav" });
         setAudioUrl(URL.createObjectURL(blob));
         handleSendAudio(blob);
       };
@@ -66,15 +68,20 @@ export default function AudioFactCheck() {
     setStatus("transcribing");
   };
 
-  // Handle dropped .mp3 file
+  // Handle dropped .wav file
   const handleDropMp3 = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
     setErrorMsg(null);
     const file = e.dataTransfer.files[0];
     if (!file) return;
-    if (file.type !== "audio/mp3" && file.type !== "audio/mpeg") {
-      setErrorMsg("Please drop a valid .mp3 file.");
+    if (
+      file.type !== "audio/wav" &&
+      file.type !== "audio/webm" &&
+      file.type !== "audio/mp3" &&
+      file.type !== "audio/mpeg"
+    ) {
+      setErrorMsg("Please drop a valid .wav, .webm or .mp3 file.");
       return;
     }
     setAudioUrl(URL.createObjectURL(file));
@@ -85,8 +92,13 @@ export default function AudioFactCheck() {
     setErrorMsg(null);
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    if (file.type !== "audio/mp3" && file.type !== "audio/mpeg") {
-      setErrorMsg("Please select a valid .mp3 file.");
+    if (
+      file.type !== "audio/wav" &&
+      file.type !== "audio/webm" &&
+      file.type !== "audio/mp3" &&
+      file.type !== "audio/mpeg"
+    ) {
+      setErrorMsg("Please select a valid .wav, .webm or .mp3 file.");
       return;
     }
     setAudioUrl(URL.createObjectURL(file));
@@ -148,7 +160,7 @@ export default function AudioFactCheck() {
     setErrorMsg(null);
   };
 
-  // Dropzone UI (now in English)
+  // Dropzone UI (slightly adjusted)
   const DropMp3Zone = () => (
     <div
       className={`border-2 border-dashed rounded-lg py-9 px-4 mb-3 w-full transition-colors flex flex-col items-center justify-center cursor-pointer
@@ -166,18 +178,18 @@ export default function AudioFactCheck() {
       tabIndex={-1}
     >
       <span className="text-3xl mb-2">🎶</span>
-      <span className="font-medium mb-1 text-base">Drag & drop an .mp3 file here</span>
+      <span className="font-medium mb-1 text-base">Drag & drop a .wav, .webm or .mp3 file here</span>
       <span className="text-sm text-secondary-text mb-2">
         Or <label htmlFor="mp3-input" className="underline cursor-pointer text-primary">browse</label> a file from your computer
       </span>
       <input
         id="mp3-input"
         type="file"
-        accept="audio/mp3,audio/mpeg"
+        accept="audio/wav,audio/webm,audio/mp3,audio/mpeg"
         className="hidden"
         onChange={handleFileInput}
       />
-      <span className="text-xs text-secondary-text pt-1 opacity-75">The .mp3 file will be transcribed and analyzed automatically.</span>
+      <span className="text-xs text-secondary-text pt-1 opacity-75">The file will be transcribed and analyzed automatically.</span>
     </div>
   );
 
