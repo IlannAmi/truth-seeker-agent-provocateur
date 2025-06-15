@@ -118,49 +118,38 @@ export default function AudioFactCheck() {
     handleSendAudio(file);
   };
 
-  // Simulate audio transcription + analysis
+  // Remplace cette fonction par une version qui contacte l'API backend
   const handleSendAudio = async (audioBlob: Blob) => {
     setStatus("transcribing");
-    // Replace here by your API call that handles transcription and fact-checking
-    try {
-      setTimeout(() => {
-        // Simulated: text recognized from audio
-        const simulatedText = "Unemployment dropped by 15% this year. CO2 emissions decreased over the past year.";
-        setTranscript(simulatedText);
 
-        setStatus("analyzing");
-        setTimeout(() => {
-          setResults([
-            {
-              statement: "Unemployment dropped by 15% this year",
-              classification: "orange",
-              confidence: 75,
-              summary: "Partially accurate but lacks temporal context",
-              sources: {
-                supporting: ["INSEE Q3 2024", "Employment Agency Stats"],
-                contradicting: ["OECD Report 2024"],
-                nuanced: ["France Strategy Analysis"]
-              },
-              explanation: "The figures are correct but need further precision regarding the period considered."
-            },
-            {
-              statement: "CO2 emissions decreased over the past year.",
-              classification: "green",
-              confidence: 90,
-              summary: "Consistent with the latest environmental reports.",
-              sources: {
-                supporting: ["Ministry of Ecology Report 2024"],
-                contradicting: [],
-                nuanced: ["European Environment Agency Overview"]
-              },
-              explanation: "Recent data supports a decline, though local variations may exist."
-            }
-          ]);
-          setStatus("completed");
-        }, 1500);
-      }, 1750);
-    } catch (e) {
-      setErrorMsg("Error during audio analysis.");
+    const BACKEND_SPEECH_URL = "http://127.0.0.1:8000/api/speech";
+    try {
+      const formData = new FormData();
+      formData.append("file", audioBlob, "audio.webm");
+
+      // Pour montrer la progression à l'utilisateur
+      setTranscript(null);
+      setErrorMsg(null);
+
+      // Optionnel : on peut aussi garder "Analyzing..." un court instant visuellement
+      const resp = await fetch(BACKEND_SPEECH_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(text || `Backend error: ${resp.status}`);
+      }
+
+      // Suppose que la réponse backend ressemble à ce qui est attendu (voir la réponse précédente)
+      const data = await resp.json();
+
+      setStatus("completed");
+      setResults([data]);
+      setTranscript(data.transcript || null); // Essayez d'obtenir la transcription si elle est incluse dans la réponse
+    } catch (e: any) {
+      setErrorMsg("Error during audio analysis. " + (e?.message || ""));
       setStatus("error");
     }
   };
@@ -266,12 +255,16 @@ export default function AudioFactCheck() {
                 )}
               </div>
             )}
-            {results.length === 0 && (
-              <div className="text-center py-10">Analysis in progress...</div>
-            )}
-            {results.length > 0 &&
-              <ResultsList results={results} onRetry={handleReset} />
-            }
+            {/* Affiche la réponse brute (exemple : JSON), à personnaliser selon structure backend */}
+            <div className="card max-w-2xl w-full p-5 mx-auto my-10 text-sm text-primary-text">
+              <pre className="whitespace-pre-wrap break-words">{results.length > 0 ? JSON.stringify(results[0], null, 2) : "Analysis in progress..."}</pre>
+              <Button
+                onClick={handleReset}
+                className="mt-6 px-5 py-2 bg-institutional-blue text-white rounded font-medium shadow hover:bg-institutional-blue/90 transition"
+              >
+                Restart
+              </Button>
+            </div>
           </div>
         )}
         {status === "idle" && <EmptyState />}
