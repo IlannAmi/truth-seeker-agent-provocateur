@@ -31,6 +31,16 @@ export default function AudioFactCheck() {
   const audioChunks = useRef<Blob[]>([]);
   const [isDragging, setIsDragging] = useState(false);
 
+  // Detection du type mime disponible pour MediaRecorder (wav ou webm ou autre)
+  const getSupportedAudioMimeType = () => {
+    if (MediaRecorder.isTypeSupported("audio/wav")) return "audio/wav";
+    if (MediaRecorder.isTypeSupported("audio/webm")) return "audio/webm";
+    if (MediaRecorder.isTypeSupported("audio/ogg")) return "audio/ogg";
+    if (MediaRecorder.isTypeSupported("audio/mp4")) return "audio/mp4";
+    // fallback navigateur (laisser le MediaRecorder choisir)
+    return "";
+  };
+
   // Start recording audio from mic
   const handleStartRecording = async () => {
     setErrorMsg(null);
@@ -41,16 +51,19 @@ export default function AudioFactCheck() {
     setIsMicAllowed(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // IMPORTANT : Utiliser audio/wav si supporté par le navigateur
-      const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/wav" });
+      // DÉTECTION DYNAMIQUE DU FORMAT SUPPORTÉ
+      const mimeType = getSupportedAudioMimeType();
+      const options = mimeType ? { mimeType } : undefined;
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
       audioChunks.current = [];
       mediaRecorder.ondataavailable = event => {
         if (event.data.size > 0) audioChunks.current.push(event.data);
       };
       mediaRecorder.onstop = () => {
-        // Création du blob WAV
-        const blob = new Blob(audioChunks.current, { type: "audio/wav" });
+        // Utilise le bon type MIME pour le blob
+        const blobType = mimeType || "audio/webm";
+        const blob = new Blob(audioChunks.current, { type: blobType });
         setAudioUrl(URL.createObjectURL(blob));
         handleSendAudio(blob);
       };
@@ -58,7 +71,7 @@ export default function AudioFactCheck() {
     } catch {
       setIsMicAllowed(false);
       setStatus("idle");
-      setErrorMsg("Microphone permission denied.");
+      setErrorMsg("Microphone permission denied or format not supported.");
     }
   };
 
