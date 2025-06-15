@@ -7,6 +7,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AudioFactCheck from "./pages/AudioFactCheck";
+import TwitterAnalysis from "./pages/TwitterAnalysis";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
@@ -33,3 +34,4 @@ const App = () => {
 };
 
 export default App;
+
