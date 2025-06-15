@@ -1,3 +1,4 @@
+
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import AnalyseInput from "@/components/AnalyseInput";
 import EmptyState from "@/components/EmptyState";
@@ -81,10 +82,10 @@ const Index = () => {
         {status === "completed" && (
           <ResultsList results={results} onRetry={handleReset} />
         )}
-        {/* Ajout d'un raccourci vers la page audio */}
+        {/* Shortcut to audio page, now in English */}
         <div className="mt-7">
           <a href="/audio" className="inline-block text-institutional-blue hover:underline text-base font-medium">
-            ou essayez l<span>&rsquo;</span>analyse vocale →
+            or try voice analysis →
           </a>
         </div>
       </main>
@@ -94,3 +95,4 @@ const Index = () => {
 };
 
 export default Index;
+
