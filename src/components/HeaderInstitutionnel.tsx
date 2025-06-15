@@ -2,9 +2,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// Logos officiels
+// Logo Smolagent
 const SMOLAGENT_LOGO = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/smolagents/icon_smolagents.png";
-const CLAUDE_LOGO = "https://assets-global.website-files.com/621715d78e2c3e7c4c9a8839/65da8fe95858b29509a1c58d_Anthropic%20Claude%20Icon-p-500.png";
 
 export default function HeaderInstitutionnel() {
   const location = useLocation();
@@ -17,15 +16,8 @@ export default function HeaderInstitutionnel() {
           className="w-9 h-9 object-contain"
         />
         <span className="font-bold text-xl text-primary-text">Debate Analyzer</span>
-        {/* POWERED WITH CLAUDE SONNET 4 & logo */}
-        <span className="ml-4 flex items-center gap-2 bg-[#F5F6FA] rounded px-2 py-0.5 text-xs font-semibold text-[#754fff] border border-[#ebeaff]">
-          POWERED WITH CLAUDE SONNET 4
-          <img
-            src={CLAUDE_LOGO}
-            alt="Claude Sonnet 4 Logo"
-            className="w-6 h-6 object-contain"
-            style={{ marginLeft: "2px" }}
-          />
+        <span className="ml-4 flex items-center gap-2 bg-[#F5F6FA] rounded px-2 py-0.5 text-xs font-semibold text-[#754fff] border border-[#ebeaff] whitespace-nowrap">
+          POWERED WITH AI AGENTS BASED ON CLAUDE 4 SONNET
         </span>
       </div>
       <nav className="flex items-center gap-6">
@@ -42,4 +34,3 @@ export default function HeaderInstitutionnel() {
     </header>
   );
 }
-
