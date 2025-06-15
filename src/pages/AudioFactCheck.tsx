@@ -197,7 +197,7 @@ export default function AudioFactCheck() {
               onClick={handleStartRecording}
               className="w-full h-11 rounded-lg font-medium text-base bg-institutional-blue text-white shadow-sm hover:bg-institutional-blue/90 transition-all"
             >
-              🎤 Record your voice for checking
+              Record a discussion to be fact-checked
             </Button>
             <div className="my-2 text-secondary-text text-sm font-medium">or</div>
             <DropMp3Zone />
