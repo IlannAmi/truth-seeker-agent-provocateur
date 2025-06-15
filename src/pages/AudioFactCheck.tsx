@@ -186,6 +186,7 @@ export default function AudioFactCheck() {
       <HeaderInstitutionnel />
       <main className="flex-grow flex-col flex items-center justify-start pt-8 px-2 w-full">
         <h2 className="text-2xl font-bold mb-4">Speech Analysis</h2>
+        <div className="text-base text-secondary-text mb-6">Record a discussion to be fact-checked</div>
         {/* Show the TrustBar if there are results */}
         {results.length > 0 && (
           <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} className="mb-4" />
