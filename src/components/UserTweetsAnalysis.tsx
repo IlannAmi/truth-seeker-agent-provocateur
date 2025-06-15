@@ -122,20 +122,32 @@ type UserTweetsAnalysisProps = {};
 
 export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
   const [selectedUser, setSelectedUser] = useState(MOCK_USERS[0]);
-  const [page, setPage] = useState(0); // page 0: tweets 0–4, page 1: 5–9 etc.
+  const [page, setPage] = useState(0); // page: 0, 1, 2...
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    // Simuler un fetch API
-    setTimeout(() => {
-      // Ici tu pourrais remplacer par un vrai appel api/twitter et analyse
-      const start = page * 5;
-      const end = start + 5;
-      setTweets(addFakeStatsToTweets(MOCK_TWEETS.slice(start, end)));
-      setLoading(false);
-    }, 900 + page * 150); // temps variable selon la page
+    // Simuler un fetch API pour la page 0 ou changement de compte : reset
+    if (page === 0) {
+      setTimeout(() => {
+        const start = 0;
+        const end = 5;
+        setTweets(addFakeStatsToTweets(MOCK_TWEETS.slice(start, end)));
+        setLoading(false);
+      }, 900);
+    } else {
+      // Si navigation "browse more", ajouter à la liste
+      setTimeout(() => {
+        const start = page * 5;
+        const end = start + 5;
+        setTweets(prevTweets =>
+          prevTweets.concat(addFakeStatsToTweets(MOCK_TWEETS.slice(start, end)))
+        );
+        setLoading(false);
+      }, 900 + page * 150);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser, page]);
 
   function handleUserChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -143,6 +155,7 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
     if (user) {
       setSelectedUser(user);
       setPage(0);
+      setTweets([]); // on réinitialise
     }
   }
 
@@ -167,13 +180,14 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
           ))}
         </select>
       </form>
-      {loading ? (
+      {loading && tweets.length === 0 ? (
         <div className="flex flex-col items-center mt-10">
           <Loader className="animate-spin text-[#1DA1F2] mb-2" />
           <div className="font-medium text-lg">Fetching tweets and running analysis...</div>
         </div>
       ) : (
         <div className="w-full flex flex-col gap-4">
+          {/* Liste cumulative */}
           {tweets.map(tweet => (
             <TweetCard
               key={tweet.id}
@@ -181,7 +195,14 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
               user={selectedUser}
             />
           ))}
-          {(page + 1) * 5 < MOCK_TWEETS.length && (
+          {/* Affiche le loader en bas si on ajoute plus de tweets */}
+          {loading && tweets.length > 0 && (
+            <div className="flex flex-col items-center my-2">
+              <Loader className="animate-spin text-[#1DA1F2] mb-2" />
+              <div className="font-medium text-sm">Fetching more tweets...</div>
+            </div>
+          )}
+          {((page + 1) * 5 < MOCK_TWEETS.length) && !loading && (
             <Button
               variant="outline"
               className="mx-auto my-2"
@@ -196,3 +217,4 @@ export default function UserTweetsAnalysis({ }: UserTweetsAnalysisProps) {
     </div>
   );
 }
+
