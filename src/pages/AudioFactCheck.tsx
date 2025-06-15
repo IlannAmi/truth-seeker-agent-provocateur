@@ -1,10 +1,10 @@
-
 import { useState, useRef } from "react";
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import EmptyState from "@/components/EmptyState";
 import FooterInstitutionnel from "@/components/FooterInstitutionnel";
 import ResultsList from "@/components/ResultsList";
 import { Button } from "@/components/ui/button";
+import TrustBarSummary from "@/components/TrustBarSummary";
 
 type AgentStatus = "idle" | "recording" | "transcribing" | "analyzing" | "completed" | "error";
 type AnalysisResult = {
@@ -127,7 +127,12 @@ export default function AudioFactCheck() {
       <HeaderInstitutionnel />
       <main className="flex-grow flex-col flex items-center justify-start pt-8 px-2 w-full">
         <h2 className="text-2xl font-bold mb-4">Voice Debate Analysis</h2>
-
+        {/* Afficher la TrustBar s'il y a des résultats */}
+        {results.length > 0 && (
+          <div className="w-full max-w-xl mb-3">
+            <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} />
+          </div>
+        )}
         {(status === "idle" || status === "error") && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
             <Button
@@ -145,7 +150,6 @@ export default function AudioFactCheck() {
             <div className="text-secondary-text mt-3 text-sm">Click to start recording using your microphone.</div>
           </div>
         )}
-
         {status === "recording" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
             <div className="text-lg mb-4">⏺️ Recording in progress...</div>
@@ -159,13 +163,11 @@ export default function AudioFactCheck() {
             <div className="text-secondary-text mt-3 text-sm">Speak clearly, then click when finished.</div>
           </div>
         )}
-
         {status === "transcribing" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
             <div className="animate-pulse text-lg font-medium">🔎 Transcription and analysis in progress...</div>
           </div>
         )}
-
         {/* Display transcription and results */}
         {(status === "analyzing" || status === "completed") && (
           <div className="w-full">
@@ -187,7 +189,6 @@ export default function AudioFactCheck() {
             }
           </div>
         )}
-
         {status === "idle" && <EmptyState />}
       </main>
       <FooterInstitutionnel />

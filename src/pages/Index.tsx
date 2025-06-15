@@ -1,10 +1,10 @@
-
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import AnalyseInput from "@/components/AnalyseInput";
 import EmptyState from "@/components/EmptyState";
 import FooterInstitutionnel from "@/components/FooterInstitutionnel";
 import AnalysisProgress from "@/components/AnalysisProgress";
 import ResultsList from "@/components/ResultsList";
+import TrustBarSummary from "@/components/TrustBarSummary";
 import { useState } from "react";
 import { analyzeDebate } from "@/services/agentService";
 
@@ -67,6 +67,12 @@ const Index = () => {
     <div className="bg-background min-h-screen w-full flex flex-col font-inter">
       <HeaderInstitutionnel />
       <main className="flex-grow flex items-center flex-col justify-start pt-8 px-2 w-full">
+        {/* Afficher la TrustBar s'il y a des résultats */}
+        {results.length > 0 && (
+          <div className="w-full max-w-xl mb-3">
+            <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} />
+          </div>
+        )}
         {(status === "idle" || status === "error") && (
           <AnalyseInput
             onAnalyze={handleAnalyze}
@@ -95,4 +101,3 @@ const Index = () => {
 };
 
 export default Index;
-

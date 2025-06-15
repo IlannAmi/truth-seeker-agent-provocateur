@@ -1,8 +1,8 @@
-
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { CheckCircle, AlertTriangle, XCircle, HelpCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import TrustBarSummary from "./TrustBarSummary";
 
 const STATUS_LABELS = {
   green: { label: "Verified", color: "#38A169", icon: <CheckCircle className="text-[#38A169]" size={18} /> },
@@ -28,14 +28,12 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
   tweets.forEach((t) => {
     counts[t.classification]++;
   });
-
   const data = (["green", "orange", "red", "grey"] as const).map((key) => ({
     name: STATUS_LABELS[key].label,
     value: counts[key],
     key,
     color: STATUS_LABELS[key].color,
   }));
-
   const total = tweets.length;
 
   // Calcule en pourcentage pour chaque segment
@@ -72,13 +70,10 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
         <div className="font-bold text-base text-primary">{name}</div>
         <div className="text-xs font-mono text-muted-foreground">@{username}</div>
       </div>
-      <div className="flex-1 flex flex-col gap-3 w-full pl-2">
-        {/* Barre colorée segmentée pleine largeur */}
-        <div className="w-full h-4 rounded-full bg-muted flex overflow-hidden border border-border">
-          {barSegments}
-        </div>
-
-        {/* Stats et logos sous la barre, sur une nouvelle ligne */}
+      <div className="flex-1 flex flex-col w-full pl-2">
+        {/* Barre colorée segmentée pleine largeur, maintenant AU DESSUS */}
+        <TrustBarSummary items={tweets} />
+        {/* Stats/icônes sous la barre, sur une nouvelle ligne */}
         <div className="flex flex-row items-center gap-6 md:gap-3 justify-center">
           {data.map((entry) => (
             <div className="flex flex-col items-center" key={entry.key}>
@@ -88,7 +83,6 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
             </div>
           ))}
         </div>
-        {/* Plus d'index ni de texte supplémentaire ici */}
       </div>
     </Card>
   );
