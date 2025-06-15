@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
@@ -41,3 +40,60 @@
 ::-moz-placeholder { color: #A0AEC0; }
 :-ms-input-placeholder { color: #A0AEC0; }
 ::placeholder { color: #A0AEC0; }
+
+/* James Bond iris/gun-barrel transition */
+.jb-iris-transition {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+
+.jb-barrel-circle {
+  width: 100vw;
+  height: 100vw;
+  background: black;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 16px #333 inset,
+    0 0 0 48px #fff inset;
+  border: 8px solid #aaa;
+  filter: drop-shadow(0 0 6px #0008);
+  pointer-events: none;
+}
+
+.jb-iris-open {
+  animation: jb-iris-open 0.8s cubic-bezier(.62,0,.54,1) both;
+}
+.jb-iris-close {
+  animation: jb-iris-close 0.8s cubic-bezier(.62,0,.54,1) both;
+}
+
+@keyframes jb-iris-open {
+  from {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 1;
+  }
+  85% {
+    clip-path: circle(70% at 50% 50%);
+    opacity: 1;
+  }
+  to {
+    clip-path: circle(120% at 50% 50%);
+    opacity: 0;
+  }
+}
+@keyframes jb-iris-close {
+  from {
+    clip-path: circle(120% at 50% 50%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  to {
+    clip-path: circle(0% at 50% 50%);
+    opacity: 1;
+  }
+}
