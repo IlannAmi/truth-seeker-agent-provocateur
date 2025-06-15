@@ -81,6 +81,12 @@ const Index = () => {
         {status === "completed" && (
           <ResultsList results={results} onRetry={handleReset} />
         )}
+        {/* Ajout d'un raccourci vers la page audio */}
+        <div className="mt-7">
+          <a href="/audio" className="inline-block text-institutional-blue hover:underline text-base font-medium">
+            ou essayez l<span>&rsquo;</span>analyse vocale →
+          </a>
+        </div>
       </main>
       <FooterInstitutionnel />
     </div>
