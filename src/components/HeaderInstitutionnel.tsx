@@ -34,8 +34,8 @@ export default function HeaderInstitutionnel() {
           <span className="flex items-center gap-2 bg-[#F5F6FA] rounded px-2 py-0.5 text-xs font-semibold text-[#754fff] border border-[#ebeaff] whitespace-nowrap">
             POWERED WITH AI AGENTS
           </span>
-          <div className="flex items-center gap-2 mt-1">
-            <label htmlFor="ai-model" className="text-xs text-[#555] font-medium">Modèle&nbsp;:</label>
+          <div className="flex flex-col gap-1 mt-1">
+            <label htmlFor="ai-model" className="text-xs text-[#555] font-medium">Model:</label>
             <select
               id="ai-model"
               value={selectedModel}

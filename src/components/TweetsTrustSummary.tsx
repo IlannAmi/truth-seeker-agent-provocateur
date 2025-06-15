@@ -38,24 +38,32 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
 
   const total = tweets.length;
 
-  // Indice de confiance simple (vert=3 pts, orange=2, grey=1, rouge=0)
-  const score = total
-    ? Math.round(
-        (counts.green * 3 + counts.orange * 2 + counts.grey) / (total * 3) * 100
-      )
-    : 0;
-  let trustLevel = "Fair";
-  let trustColor = "#F6AD55";
-  if (score >= 75) {
-    trustLevel = "Reliable";
-    trustColor = "#38A169";
-  } else if (score <= 35) {
-    trustLevel = "Low";
-    trustColor = "#E53E3E";
-  } else if (score < 55) {
-    trustLevel = "Questionable";
-    trustColor = "#F56565";
-  }
+  // Calcule en pourcentage pour chaque segment
+  const segments = [
+    { color: "#38A169", count: counts.green, label: "green" },
+    { color: "#F6AD55", count: counts.orange, label: "orange" },
+    { color: "#E53E3E", count: counts.red, label: "red" },
+    { color: "#718096", count: counts.grey, label: "grey" },
+  ];
+  const segmentPercents = segments.map(s =>
+    total === 0 ? 0 : (s.count / total) * 100
+  );
+
+  let startPercent = 0;
+  const barSegments = segmentPercents.map((percent, idx) => {
+    const el = (
+      <div
+        key={segments[idx].label}
+        style={{
+          width: `${percent}%`,
+          background: segments[idx].color,
+        }}
+        className="h-full transition-all"
+      />
+    );
+    startPercent += percent;
+    return el;
+  });
 
   return (
     <Card className="w-full flex flex-col md:flex-row items-center md:items-stretch gap-4 px-4 py-4 mb-4 font-inter">
@@ -79,42 +87,36 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
           ))}
         </div>
 
-        <div className="w-32 h-24 flex items-center justify-center">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={36}
-                innerRadius={24}
-                stroke="#fff"
-              >
-                {data.map((entry) => (
-                  <Cell key={entry.key} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(_, name) => [`${name}`]}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="flex flex-col items-center justify-center flex-1 px-4">
-          <div className="text-xs text-muted-foreground mb-1">Account trust index:</div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono font-bold text-xl" style={{ color: trustColor }}>
-              {trustLevel}
-            </span>
-            <span className="text-sm text-muted-foreground">({score}%)</span>
+        <div className="flex flex-col items-center gap-2 w-40 max-w-xs">
+          <div className="w-full h-7 flex items-center justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={36}
+                  innerRadius={24}
+                  stroke="#fff"
+                >
+                  {data.map((entry) => (
+                    <Cell key={entry.key} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(_, name) => [`${name}`]}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-          <div className="text-xs text-muted-foreground mt-1 text-center max-w-[180px]">
-            Calculated from the factual accuracy of {total} recent tweets.
+          {/* Barre segmentée en-dessous */}
+          <div className="w-full h-3 rounded-full bg-muted flex overflow-hidden mt-1 border border-border">
+            {barSegments}
           </div>
         </div>
+        {/* On n'affiche plus d'index ni de texte supplémentaire ici */}
       </div>
     </Card>
   );
