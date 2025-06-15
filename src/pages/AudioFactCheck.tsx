@@ -129,9 +129,7 @@ export default function AudioFactCheck() {
         <h2 className="text-2xl font-bold mb-4">Voice Debate Analysis</h2>
         {/* Afficher la TrustBar s'il y a des résultats */}
         {results.length > 0 && (
-          <div className="w-full max-w-xl mb-3">
-            <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} />
-          </div>
+          <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} className="mb-4" />
         )}
         {(status === "idle" || status === "error") && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">

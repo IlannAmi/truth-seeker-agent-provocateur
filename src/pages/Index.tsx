@@ -67,11 +67,9 @@ const Index = () => {
     <div className="bg-background min-h-screen w-full flex flex-col font-inter">
       <HeaderInstitutionnel />
       <main className="flex-grow flex items-center flex-col justify-start pt-8 px-2 w-full">
-        {/* Afficher la TrustBar s'il y a des résultats */}
+        {/* Afficher la TrustBar "card summary" s'il y a des résultats */}
         {results.length > 0 && (
-          <div className="w-full max-w-xl mb-3">
-            <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} />
-          </div>
+          <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} className="mb-3" />
         )}
         {(status === "idle" || status === "error") && (
           <AnalyseInput

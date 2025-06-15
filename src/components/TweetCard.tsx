@@ -8,22 +8,22 @@ const STATUS_INFO = {
   red: {
     label: "Disputed",
     badge: "bg-[#E53E3E] text-white",
-    icon: <XCircle className="text-[#E53E3E]" size={16} />,
+    icon: <XCircle className="text-white" size={16} />,
   },
   orange: {
     label: "Needs Context",
     badge: "bg-[#DD6B20] text-white",
-    icon: <AlertTriangle className="text-[#DD6B20]" size={16} />,
+    icon: <AlertTriangle className="text-white" size={16} />,
   },
   green: {
     label: "Verified",
     badge: "bg-[#38A169] text-white",
-    icon: <CheckCircle className="text-[#38A169]" size={16} />,
+    icon: <CheckCircle className="text-white" size={16} />,
   },
   grey: {
     label: "Not Verifiable",
     badge: "bg-[#718096] text-white",
-    icon: <AlertTriangle className="text-[#718096]" size={16} />,
+    icon: <AlertTriangle className="text-white" size={16} />,
   },
 } as const;
 
