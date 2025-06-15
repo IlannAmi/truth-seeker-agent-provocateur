@@ -121,7 +121,6 @@ export default function AudioFactCheck() {
   // Envoi du .webm et gestion du parsing backend :
   const handleSendAudio = async (audioBlob: Blob) => {
     setStatus("transcribing");
-
     const BACKEND_SPEECH_URL = "http://127.0.0.1:8000/api/speech/process-audio/";
     try {
       const formData = new FormData();
@@ -140,34 +139,64 @@ export default function AudioFactCheck() {
       }
       const data = await resp.json();
 
-      // Gestion automatique : transcription / analyse
-      // Cas 1 : le backend répond simplement { text: ... }
+      // Cas simple transcription :
       if (typeof data === "object" && data.text && !data.statement && !data.classification) {
         setTranscript(data.text);
         setResults([]);
-        setStatus("completed"); // On "termine" même si c’est juste la transcription
+        // Au lieu de status completed, on lance directement l'analyse :
+        analyzeTranscriptWithChatBackend(data.text);
       }
-      // Cas 2 : le backend répond avec un/des objets d’analyse
+      // Cas analyse instantanée (rare) :
       else if (Array.isArray(data) || (data.statement && data.classification)) {
-        // Normalise. Si c'est un objet direct → on le met dans un array :
+        // Normalisation retour analyse
         const resultsArr = Array.isArray(data) ? data : [data];
         setResults(resultsArr);
 
-        // Transcription si présente dans data :
         let transcriptText = (data.transcript || (resultsArr[0]?.transcript) || "");
-        // fallback: ignorez les faux vides
         if (!transcriptText && typeof data === "object" && data.text) transcriptText = data.text;
         setTranscript(transcriptText || null);
 
         setStatus("completed");
       }
-      // Cas réponse inattendue :
       else {
         setErrorMsg("Backend response format not recognized.");
         setStatus("error");
       }
     } catch (e: any) {
       setErrorMsg("Error during audio analysis. " + (e?.message || ""));
+      setStatus("error");
+    }
+  };
+
+  // Analyse du transcript via backend /api/chat/ (appel automatique)
+  const analyzeTranscriptWithChatBackend = async (text: string) => {
+    setStatus("analyzing");
+    setResults([]);
+    setErrorMsg(null);
+    try {
+      const resp = await fetch("http://127.0.0.1:8000/api/chat/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input_text: text }),
+      });
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(txt || `Backend error: ${resp.status}`);
+      }
+      const data = await resp.json();
+      // on Attend un tableau de résultats
+      if (Array.isArray(data) && data[0]?.statement && data[0]?.classification) {
+        setResults(data);
+        setStatus("completed");
+      } else if (typeof data === "object" && data.statement && data.classification) {
+        setResults([data]);
+        setStatus("completed");
+      } else {
+        setErrorMsg("Chat backend did not return a valid analysis.");
+        setStatus("error");
+      }
+    } catch (err: any) {
+      setErrorMsg("Erreur backend analyse texte : " + (err?.message || ""));
       setStatus("error");
     }
   };
