@@ -49,21 +49,17 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
     total === 0 ? 0 : (s.count / total) * 100
   );
 
-  let startPercent = 0;
-  const barSegments = segmentPercents.map((percent, idx) => {
-    const el = (
-      <div
-        key={segments[idx].label}
-        style={{
-          width: `${percent}%`,
-          background: segments[idx].color,
-        }}
-        className="h-full transition-all"
-      />
-    );
-    startPercent += percent;
-    return el;
-  });
+  // Les segments de la barre horizontale
+  const barSegments = segmentPercents.map((percent, idx) => (
+    <div
+      key={segments[idx].label}
+      style={{
+        width: `${percent}%`,
+        background: segments[idx].color,
+      }}
+      className="h-full transition-all"
+    />
+  ));
 
   return (
     <Card className="w-full flex flex-col md:flex-row items-center md:items-stretch gap-4 px-4 py-4 mb-4 font-inter">
@@ -76,8 +72,14 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
         <div className="font-bold text-base text-primary">{name}</div>
         <div className="text-xs font-mono text-muted-foreground">@{username}</div>
       </div>
-      <div className="flex-1 flex flex-col md:flex-row items-center md:items-center gap-4 w-full pl-2">
-        <div className="flex flex-row items-center gap-6 md:gap-3">
+      <div className="flex-1 flex flex-col gap-3 w-full pl-2">
+        {/* Barre colorée segmentée pleine largeur */}
+        <div className="w-full h-4 rounded-full bg-muted flex overflow-hidden border border-border">
+          {barSegments}
+        </div>
+
+        {/* Stats et logos sous la barre, sur une nouvelle ligne */}
+        <div className="flex flex-row items-center gap-6 md:gap-3 justify-center">
           {data.map((entry) => (
             <div className="flex flex-col items-center" key={entry.key}>
               <div>{STATUS_LABELS[entry.key].icon}</div>
@@ -86,37 +88,7 @@ export default function TweetsTrustSummary({ tweets, username, name, avatar }: T
             </div>
           ))}
         </div>
-
-        <div className="flex flex-col items-center gap-2 w-40 max-w-xs">
-          <div className="w-full h-7 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={data}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={36}
-                  innerRadius={24}
-                  stroke="#fff"
-                >
-                  {data.map((entry) => (
-                    <Cell key={entry.key} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(_, name) => [`${name}`]}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          {/* Barre segmentée en-dessous */}
-          <div className="w-full h-3 rounded-full bg-muted flex overflow-hidden mt-1 border border-border">
-            {barSegments}
-          </div>
-        </div>
-        {/* On n'affiche plus d'index ni de texte supplémentaire ici */}
+        {/* Plus d'index ni de texte supplémentaire ici */}
       </div>
     </Card>
   );

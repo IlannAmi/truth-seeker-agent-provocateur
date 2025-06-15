@@ -2,10 +2,8 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// Essayez de privilégier l'image locale si uploadée, sinon fallback sur le lien Huggingface
-const SMOLAGENT_LOGO = "/smolagent.png"; // à uploader dans le dossier public
-// Si le logo ne s'affiche toujours pas, le lien fallback : 
-// const SMOLAGENT_LOGO = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/smolagents/icon_smolagents.png";
+// Privilégie l'image locale mais fallback sur le lien Huggingface si besoin
+const SMOLAGENT_LOGO = "/smolagent.png";
 
 const MODELS = [
   { value: "claude-sonnet-4", label: "Claude 4 Sonnet" },
@@ -24,7 +22,6 @@ export default function HeaderInstitutionnel() {
           alt="Smolagent Logo"
           className="w-9 h-9 object-contain bg-white rounded"
           onError={e => {
-            // fallback sur le lien Huggingface si l'image locale ne marche pas
             (e.currentTarget as HTMLImageElement).src =
               "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/smolagents/icon_smolagents.png";
           }}
@@ -34,21 +31,19 @@ export default function HeaderInstitutionnel() {
           <span className="flex items-center gap-2 bg-[#F5F6FA] rounded px-2 py-0.5 text-xs font-semibold text-[#754fff] border border-[#ebeaff] whitespace-nowrap">
             POWERED WITH AI AGENTS
           </span>
-          <div className="flex flex-col gap-1 mt-1">
-            <label htmlFor="ai-model" className="text-xs text-[#555] font-medium">Model:</label>
-            <select
-              id="ai-model"
-              value={selectedModel}
-              onChange={e => setSelectedModel(e.target.value)}
-              className="text-xs rounded border px-1.5 py-0.5 focus:outline-none bg-white/80"
-            >
-              {MODELS.map(model => (
-                <option value={model.value} key={model.value}>
-                  {model.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Suppression du label "Model:" */}
+          <select
+            id="ai-model"
+            value={selectedModel}
+            onChange={e => setSelectedModel(e.target.value)}
+            className="text-xs rounded border px-1.5 py-0.5 focus:outline-none bg-white/80 mt-1"
+          >
+            {MODELS.map(model => (
+              <option value={model.value} key={model.value}>
+                {model.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <nav className="flex items-center gap-6">
