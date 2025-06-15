@@ -1,14 +1,26 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
+import AnalyseInput from "@/components/AnalyseInput";
+import EmptyState from "@/components/EmptyState";
+import FooterInstitutionnel from "@/components/FooterInstitutionnel";
+import { useState } from "react";
 
 const Index = () => {
+  const [hasInput, setHasInput] = useState(false);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="bg-background min-h-screen w-full flex flex-col font-inter">
+      <HeaderInstitutionnel />
+      <main className="flex-grow flex items-center flex-col justify-start pt-8 px-2 w-full">
+        <AnalyseInput onAnalyze={() => setHasInput(true)} />
+        {!hasInput && (
+          <EmptyState />
+        )}
+      </main>
+      <FooterInstitutionnel />
     </div>
   );
 };
 
 export default Index;
+

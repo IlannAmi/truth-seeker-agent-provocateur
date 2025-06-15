@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -13,45 +14,44 @@ export default {
 		container: {
 			center: true,
 			padding: '2rem',
-			screens: {
-				'2xl': '1400px'
-			}
+			screens: { '2xl': '1400px' }
 		},
 		extend: {
+      fontFamily: {
+        inter: ["Inter", "system-ui", "sans-serif"],
+      },
 			colors: {
-				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
-				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
-				},
-				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
-				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
-				muted: {
-					DEFAULT: 'hsl(var(--muted))',
-					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
-				},
-				card: {
-					DEFAULT: 'hsl(var(--card))',
-					foreground: 'hsl(var(--card-foreground))'
-				},
+        // Brand Neutrals
+        background: "#FAFBFC",
+        "card-bg": "#fff",
+        "border": "#E2E8F0",
+        "primary-text": "#1A202C",
+        "secondary-text": "#4A5568",
+        muted: { DEFAULT: "#F7FAFC", foreground: "#718096" },
+        // Accents
+        "institutional-blue": "#2B6CB0",
+        "institutional-blue-light": "#EBF8FF",
+        // Status tones
+        "status-red": "#E53E3E",
+        "status-red-bg": "#FED7D7",
+        "status-orange": "#DD6B20",
+        "status-orange-bg": "#FEEBC8",
+        "status-green": "#38A169",
+        "status-green-bg": "#C6F6D5",
+        "status-gray": "#718096",
+        "status-gray-bg": "#F7FAFC",
+        // Card
+        card: { DEFAULT: "#fff", foreground: "#1A202C" },
+        // For existing classes compatibility
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        foreground: 'hsl(var(--foreground))',
+        primary: { DEFAULT: "#2B6CB0", foreground: "#fff" },
+				secondary: { DEFAULT: "#EBF8FF", foreground: "#2B6CB0" },
+				destructive: { DEFAULT: "#E53E3E", foreground: "#fff" },
+				accent: { DEFAULT: "#FEEBC8", foreground: "#DD6B20" },
+				popover: { DEFAULT: "#fff", foreground: "#1A202C" },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -64,10 +64,14 @@ export default {
 				}
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				lg: '12px',
+				md: '8px',
+				sm: '6px'
 			},
+      boxShadow: {
+        card: "0 1px 3px 0 rgba(0,0,0,0.07),0 1.5px 5px 0 rgba(0,0,0,0.03)",
+        "card-hover": "0 4px 20px 0 rgba(0,0,0,0.11)",
+      },
 			keyframes: {
 				'accordion-down': {
 					from: {
@@ -94,3 +98,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
