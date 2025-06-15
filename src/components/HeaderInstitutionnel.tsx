@@ -12,10 +12,10 @@ export default function HeaderInstitutionnel() {
       </div>
       <nav className="flex items-center gap-6">
         <Link to="/" className={`font-medium text-base hover:underline ${location.pathname === "/" ? "text-institutional-blue" : "text-secondary-text"}`}>
-          Analyse Texte
+          Text Analysis
         </Link>
         <Link to="/audio" className={`font-medium text-base hover:underline ${location.pathname === "/audio" ? "text-institutional-blue" : "text-secondary-text"}`}>
-          Analyse Voix
+          Voice Analysis
         </Link>
       </nav>
     </header>

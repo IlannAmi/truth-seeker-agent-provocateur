@@ -55,7 +55,7 @@ export default function AudioFactCheck() {
     } catch {
       setIsMicAllowed(false);
       setStatus("idle");
-      setErrorMsg("Permission au micro refusée.");
+      setErrorMsg("Microphone permission denied.");
     }
   };
 
@@ -68,15 +68,15 @@ export default function AudioFactCheck() {
   // Simulate audio transcription + analysis
   const handleSendAudio = async (audioBlob: Blob) => {
     setStatus("transcribing");
-    // Remplace ici par ton appel d'API qui gère la transcription et le fact-checking
+    // Replace here by your API call that handles transcription and fact-checking
     try {
-      // --- Simulation : transcription + analyse
+      // --- Simulation: transcription + analysis
       setTimeout(() => {
-        // Simulé : texte reconnu depuis l'audio
+        // Simulated: text recognized from audio
         const simulatedText = "Unemployment dropped by 15% this year. CO2 emissions decreased over the past year.";
         setTranscript(simulatedText);
 
-        // Ici, tu réutilises la logique d'analyse textuelle
+        // Here, reuse your text analysis logic
         setStatus("analyzing");
         setTimeout(() => {
           setResults([
@@ -109,7 +109,7 @@ export default function AudioFactCheck() {
         }, 1500);
       }, 1750);
     } catch (e) {
-      setErrorMsg("Erreur pendant l'analyse de l'audio.");
+      setErrorMsg("Error during audio analysis.");
       setStatus("error");
     }
   };
@@ -126,7 +126,7 @@ export default function AudioFactCheck() {
     <div className="bg-background min-h-screen w-full flex flex-col font-inter">
       <HeaderInstitutionnel />
       <main className="flex-grow flex-col flex items-center justify-start pt-8 px-2 w-full">
-        <h2 className="text-2xl font-bold mb-4">Analyse d'un débat par la voix</h2>
+        <h2 className="text-2xl font-bold mb-4">Voice Debate Analysis</h2>
 
         {(status === "idle" || status === "error") && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
@@ -134,39 +134,39 @@ export default function AudioFactCheck() {
               onClick={handleStartRecording}
               className="w-full h-11 rounded-lg font-medium text-base bg-institutional-blue text-white shadow-sm hover:bg-institutional-blue/90 transition-all"
             >
-              🎤 Lancer l'enregistrement
+              🎤 Start Recording
             </Button>
             {!isMicAllowed &&
-              <div className="text-destructive mt-3">Autorisation micro refusée.</div>
+              <div className="text-destructive mt-3">Microphone permission denied.</div>
             }
             {errorMsg && (
               <div className="text-destructive mt-3">{errorMsg}</div>
             )}
-            <div className="text-secondary-text mt-3 text-sm">Cliquez pour démarrer l'enregistrement avec votre micro.</div>
+            <div className="text-secondary-text mt-3 text-sm">Click to start recording using your microphone.</div>
           </div>
         )}
 
         {status === "recording" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
-            <div className="text-lg mb-4">⏺️ Enregistrement en cours...</div>
+            <div className="text-lg mb-4">⏺️ Recording in progress...</div>
             <Button
               onClick={handleStopRecording}
               variant="destructive"
               className="w-full h-11 rounded-lg font-medium text-base"
             >
-              Arrêter et analyser
+              Stop and Analyze
             </Button>
-            <div className="text-secondary-text mt-3 text-sm">Parlez clairement, puis cliquez quand c'est terminé.</div>
+            <div className="text-secondary-text mt-3 text-sm">Speak clearly, then click when finished.</div>
           </div>
         )}
 
         {status === "transcribing" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
-            <div className="animate-pulse text-lg font-medium">🔎 Transcription et analyse en cours...</div>
+            <div className="animate-pulse text-lg font-medium">🔎 Transcription and analysis in progress...</div>
           </div>
         )}
 
-        {/* Affichage transcription et résultats */}
+        {/* Display transcription and results */}
         {(status === "analyzing" || status === "completed") && (
           <div className="w-full">
             {audioUrl && (
@@ -174,13 +174,13 @@ export default function AudioFactCheck() {
                 <audio src={audioUrl} controls className="mb-2" />
                 {transcript && (
                   <div className="text-sm text-secondary-text mb-2">
-                    <strong>Transcription :</strong> {transcript}
+                    <strong>Transcription:</strong> {transcript}
                   </div>
                 )}
               </div>
             )}
             {results.length === 0 && (
-              <div className="text-center py-10">Analyse en cours...</div>
+              <div className="text-center py-10">Analysis in progress...</div>
             )}
             {results.length > 0 &&
               <ResultsList results={results} onRetry={handleReset} />
