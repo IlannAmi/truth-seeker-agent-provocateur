@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -26,12 +25,11 @@ export default function HeaderInstitutionnel() {
               "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/smolagents/icon_smolagents.png";
           }}
         />
-        <span className="font-bold text-xl text-primary-text">Debate Analyzer</span>
+        <span className="font-bold text-xl text-primary-text">OSS117 Fact Checker</span>
         <div className="ml-4 flex flex-col min-w-[180px]">
           <span className="flex items-center gap-2 bg-[#F5F6FA] rounded px-2 py-0.5 text-xs font-semibold text-[#754fff] border border-[#ebeaff] whitespace-nowrap">
             POWERED WITH AI AGENTS
           </span>
-          {/* Suppression du label "Model:" */}
           <select
             id="ai-model"
             value={selectedModel}
