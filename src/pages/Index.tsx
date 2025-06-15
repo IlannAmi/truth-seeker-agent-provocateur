@@ -51,17 +51,43 @@ const Index = () => {
       const data = await resp.json();
       setAgentThoughts(thoughts => [...thoughts, "Response received!"]);
 
-      // On accepte format: { facts_checked: [...] }
+      // Unifier formats : { facts_checked }, Array ou objet seul
       let resultsArr: any[] = [];
       if (data && Array.isArray(data.facts_checked)) {
         resultsArr = data.facts_checked;
       } else if (Array.isArray(data)) {
         resultsArr = data;
-      } else if (data && typeof data === "object" && data.statement && data.classification) {
+      } else if (data && typeof data === "object" && (data.statement && data.classification)) {
         resultsArr = [data];
       } else {
         resultsArr = [];
       }
+
+      // correction: unpack explanation if JSON stringified with answer+sources
+      resultsArr = resultsArr.map((item) => {
+        // item.explanation peut être string ou JSON stringifié
+        let parsedExplanation = item.explanation;
+        let customSources = null;
+        if (typeof parsedExplanation === "string") {
+          try {
+            const explObj = JSON.parse(parsedExplanation);
+            if (explObj && explObj.answer) {
+              parsedExplanation = explObj.answer;
+              // Si jamais le back oublie de les séparer...
+              customSources = explObj.sources || null;
+            }
+          } catch {
+            // ce n'est pas un JSON stringifié, tant pis
+          }
+        }
+        // Les sources additionnelles (liens) peuvent être injectés plus tard dans le composant détail !
+        return {
+          ...item,
+          explanation: parsedExplanation,
+          customSources,
+        };
+      });
+
       setResults(resultsArr);
       setStatus("completed");
     } catch (e: any) {

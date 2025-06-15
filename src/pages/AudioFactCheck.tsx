@@ -196,6 +196,28 @@ export default function AudioFactCheck() {
         resultsArr = [];
       }
 
+      // Déroule explanation si c'est un JSON stringifié
+      resultsArr = resultsArr.map((item) => {
+        let parsedExplanation = item.explanation;
+        let customSources = null;
+        if (typeof parsedExplanation === "string") {
+          try {
+            const explObj = JSON.parse(parsedExplanation);
+            if (explObj && explObj.answer) {
+              parsedExplanation = explObj.answer;
+              customSources = explObj.sources || null;
+            }
+          } catch {
+            // Ok : pas JSON
+          }
+        }
+        return {
+          ...item,
+          explanation: parsedExplanation,
+          customSources,
+        };
+      });
+
       if (resultsArr.length > 0) {
         setResults(resultsArr);
         setStatus("completed");
