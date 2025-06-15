@@ -1,4 +1,3 @@
-
 import { useState, useRef, DragEvent } from "react";
 import HeaderInstitutionnel from "@/components/HeaderInstitutionnel";
 import EmptyState from "@/components/EmptyState";
@@ -149,7 +148,7 @@ export default function AudioFactCheck() {
     setErrorMsg(null);
   };
 
-  // Dropzone UI
+  // Dropzone UI (now in English)
   const DropMp3Zone = () => (
     <div
       className={`border-2 border-dashed rounded-lg py-9 px-4 mb-3 w-full transition-colors flex flex-col items-center justify-center cursor-pointer
@@ -167,8 +166,10 @@ export default function AudioFactCheck() {
       tabIndex={-1}
     >
       <span className="text-3xl mb-2">🎶</span>
-      <span className="font-medium mb-1 text-base">Glissez-déposez un fichier .mp3 ici</span>
-      <span className="text-sm text-secondary-text mb-2">Ou <label htmlFor="mp3-input" className="underline cursor-pointer text-primary">parcourir</label> un fichier depuis votre ordinateur</span>
+      <span className="font-medium mb-1 text-base">Drag & drop an .mp3 file here</span>
+      <span className="text-sm text-secondary-text mb-2">
+        Or <label htmlFor="mp3-input" className="underline cursor-pointer text-primary">browse</label> a file from your computer
+      </span>
       <input
         id="mp3-input"
         type="file"
@@ -176,7 +177,7 @@ export default function AudioFactCheck() {
         className="hidden"
         onChange={handleFileInput}
       />
-      <span className="text-xs text-secondary-text pt-1 opacity-75">Le fichier .mp3 sera transcrit et analysé automatiquement.</span>
+      <span className="text-xs text-secondary-text pt-1 opacity-75">The .mp3 file will be transcribed and analyzed automatically.</span>
     </div>
   );
 
@@ -184,8 +185,8 @@ export default function AudioFactCheck() {
     <div className="bg-background min-h-screen w-full flex flex-col font-inter">
       <HeaderInstitutionnel />
       <main className="flex-grow flex-col flex items-center justify-start pt-8 px-2 w-full">
-        <h2 className="text-2xl font-bold mb-4">Speech Analysis</h2>
-        {/* Afficher la TrustBar s'il y a des résultats */}
+        <h2 className="text-2xl font-bold mb-4">Voice Analysis</h2>
+        {/* Show the TrustBar if there are results */}
         {results.length > 0 && (
           <TrustBarSummary items={results.map(r => ({ classification: r.classification }))} className="mb-4" />
         )}
@@ -195,9 +196,9 @@ export default function AudioFactCheck() {
               onClick={handleStartRecording}
               className="w-full h-11 rounded-lg font-medium text-base bg-institutional-blue text-white shadow-sm hover:bg-institutional-blue/90 transition-all"
             >
-              🎤 Enregistrer votre voix pour vérification
+              🎤 Record your voice for checking
             </Button>
-            <div className="my-2 text-secondary-text text-sm font-medium">ou</div>
+            <div className="my-2 text-secondary-text text-sm font-medium">or</div>
             <DropMp3Zone />
             {!isMicAllowed &&
               <div className="text-destructive mt-3">Microphone permission denied.</div>
@@ -205,25 +206,25 @@ export default function AudioFactCheck() {
             {errorMsg && (
               <div className="text-destructive mt-3">{errorMsg}</div>
             )}
-            <div className="text-secondary-text mt-3 text-sm">Cliquez sur le micro ou déposez un .mp3 à analyser.</div>
+            <div className="text-secondary-text mt-3 text-sm">Click the mic or drop an .mp3 to analyze.</div>
           </div>
         )}
         {status === "recording" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
-            <div className="text-lg mb-4">⏺️ Enregistrement en cours...</div>
+            <div className="text-lg mb-4">⏺️ Recording...</div>
             <Button
               onClick={handleStopRecording}
               variant="destructive"
               className="w-full h-11 rounded-lg font-medium text-base"
             >
-              Arrêter et Analyser
+              Stop and Analyze
             </Button>
-            <div className="text-secondary-text mt-3 text-sm">Parlez distinctement, puis cliquez quand c'est fini.</div>
+            <div className="text-secondary-text mt-3 text-sm">Speak clearly, then click when finished.</div>
           </div>
         )}
         {status === "transcribing" && (
           <div className="card p-6 max-w-xl w-full mx-auto mt-6 text-center">
-            <div className="animate-pulse text-lg font-medium">🔎 Transcription et analyse en cours...</div>
+            <div className="animate-pulse text-lg font-medium">🔎 Transcribing and analyzing...</div>
           </div>
         )}
         {/* Display transcription and results */}
@@ -234,13 +235,13 @@ export default function AudioFactCheck() {
                 <audio src={audioUrl} controls className="mb-2" />
                 {transcript && (
                   <div className="text-sm text-secondary-text mb-2">
-                    <strong>Transcription :</strong> {transcript}
+                    <strong>Transcription:</strong> {transcript}
                   </div>
                 )}
               </div>
             )}
             {results.length === 0 && (
-              <div className="text-center py-10">Analyse en cours...</div>
+              <div className="text-center py-10">Analysis in progress...</div>
             )}
             {results.length > 0 &&
               <ResultsList results={results} onRetry={handleReset} />
