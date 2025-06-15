@@ -3,8 +3,20 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ClipboardPaste } from "lucide-react";
 
-export default function AnalyseInput({ onAnalyze }: { onAnalyze: (txt: string) => void }) {
-  const [input, setInput] = useState("");
+type AnalyseInputProps = {
+  onAnalyze: (txt: string) => void;
+  initialValue?: string;
+  isError?: boolean;
+  errorMsg?: string;
+};
+
+export default function AnalyseInput({
+  onAnalyze,
+  initialValue = "",
+  isError = false,
+  errorMsg = "",
+}: AnalyseInputProps) {
+  const [input, setInput] = useState(initialValue);
   const [focused, setFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -20,9 +32,15 @@ export default function AnalyseInput({ onAnalyze }: { onAnalyze: (txt: string) =
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
   };
+
   return (
-    <div className="card p-6 max-w-2xl mx-auto mt-8">
-      <label htmlFor="oss-textarea" className="block text-lg font-medium text-primary-text mb-2">Paste Debate Text</label>
+    <div className="card p-6 max-w-2xl mx-auto mt-8 w-full">
+      <label
+        htmlFor="oss-textarea"
+        className="block text-lg font-medium text-primary-text mb-2"
+      >
+        Paste Debate Text
+      </label>
       <div className="relative">
         <textarea
           ref={textareaRef}
@@ -33,12 +51,14 @@ export default function AnalyseInput({ onAnalyze }: { onAnalyze: (txt: string) =
             placeholder-secondary-text text-primary-text
             focus:outline-none transition-all
             ${focused ? "border-institutional-blue ring-2 ring-institutional-blue/20" : "border-border"}
+            ${isError ? "border-destructive ring-2 ring-destructive/20" : ""}
           `}
           placeholder="Paste the political debate text to analyze..."
           value={input}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onChange={handleChange}
+          maxLength={2000}
           style={{ fontFamily: "inherit", lineHeight: 1.6 }}
         />
         <button
@@ -51,7 +71,14 @@ export default function AnalyseInput({ onAnalyze }: { onAnalyze: (txt: string) =
         >
           <ClipboardPaste size={20} />
         </button>
-        <span className="absolute bottom-1.5 right-2 text-xs text-secondary-text">{input.length}/2000</span>
+        <span className="absolute bottom-1.5 right-2 text-xs text-secondary-text">
+          {input.length}/2000
+        </span>
+        {isError && (
+          <span className="absolute -bottom-7 left-0 text-destructive text-sm font-medium">
+            {errorMsg}
+          </span>
+        )}
       </div>
       <Button
         type="button"
@@ -68,5 +95,6 @@ export default function AnalyseInput({ onAnalyze }: { onAnalyze: (txt: string) =
         Analyze Now
       </Button>
     </div>
-  )
+  );
 }
+
